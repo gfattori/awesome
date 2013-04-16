@@ -484,12 +484,16 @@ vicious.register( batwidget, vicious.widgets.bat, "$2", 10, "BAT")
 
 function batstate()
 
-     local file = io.open("/sys/class/power_supply/BAT/status", "r")
-
-     if (file == nil) then
+     local ACfile=io.open("/sys/class/power_supply/AC/online", "r")
+     local ACstate = ACfile:read("*line")
+     ACfile:close()
+     
+      
+     if (ACstate == "1") then
      	  return "Cable plugged"
      end
-
+      
+     local file = io.open("/sys/class/power_supply/BAT/status", "r")
      local batstate = file:read("*line")
      file:close()
 
