@@ -141,39 +141,89 @@ for s = 1, screen.count() do
 end
 -- }}}
  
+
+
+-- -- -- -- myawesomemenu = {
+-- -- -- -- --   { "manual", "terminator -x man awesome" },
+-- -- -- -- --   { "edit config", "terminator -x vim /home/bradomyn/.config/awesome/rc.lua"},
+-- -- -- --    { "manual", terminal .. " -e man awesome" },
+-- -- -- --    { "edit config", editor_cmd .. " " .. awful.util.getdir("config") .. "/rc.lua" },
+-- -- -- --    { "restart", awesome.restart },
+-- -- -- --    { "quit", awesome.quit },
+-- -- -- --    { "poweroff", "su -c poweroff" },
+-- -- -- --    { "reboot", "su -c reboot"},
+-- -- -- --    { "lock screen", "gnome-screensaver-command -l"}
+-- -- -- -- }
+-- -- -- -- 
+-- -- -- -- rag_bag = {
+-- -- -- -- 	{ "Calculator", "qalculate-gtk" },
+-- -- -- -- 	{ "vlc", vlc },
+-- -- -- -- }
+-- -- -- -- 
+-- -- -- -- mysystem = {
+-- -- -- --     { "appearance" , "lxappearance" },
+-- -- -- --     { "cleaning" , "bleachbit" },
+-- -- -- --     { "powertop" , terminal .. " -e su -c powertop " },
+-- -- -- --     { "task manager" , tasks }
+-- -- -- -- }
+-- -- -- -- 
+-- -- -- -- mymainmenu = awful.menu({ items = {
+-- -- -- -- 	{ "open terminal", terminal },
+-- -- -- --     { "chromium", "google-chrome --allow-outdated-plugins --memory-model=low" },
+-- -- -- --     { "Rag-Bag",rag_bag  },
+-- -- -- -- 	{ "spotify", "spotify" },
+-- -- -- -- 	{ "system", mysystem },
+-- -- -- -- 	{ "awesome", myawesomemenu, beautiful.awesome_icon }
+-- -- -- --  }
+-- -- -- --  })
+
+-- {{{ Menu
+-- Create a laucher widget and a main menu
 myawesomemenu = {
---   { "manual", "terminator -x man awesome" },
---   { "edit config", "terminator -x vim /home/bradomyn/.config/awesome/rc.lua"},
    { "manual", terminal .. " -e man awesome" },
    { "edit config", editor_cmd .. " " .. awful.util.getdir("config") .. "/rc.lua" },
    { "restart", awesome.restart },
    { "quit", awesome.quit },
-   { "poweroff", "su -c poweroff" },
-   { "reboot", "su -c reboot"},
-   { "lock screen", "gnome-screensaver-command -l"}
+   { "poweroff", "sudo poweroff" }
 }
 
-rag_bag = {
-	{ "Calculator", "qalculate-gtk" },
-	{ "vlc", vlc },
+officemenu = {
+        { "lyx", "lyx" },
+        { "acroread", "acroread" },
+        { "OOo calc", "libreoffice -calc" },
+        { "OOo impress", "libreoffice -impress" },
+        { "OOo writer", "libreoffice -writer" },
 }
 
-mysystem = {
-    { "appearance" , "lxappearance" },
-    { "cleaning" , "bleachbit" },
-    { "powertop" , terminal .. " -e su -c powertop " },
-    { "task manager" , tasks }
+develmenu = {
+        { "kdevelop", "kdevelop" },
+        { "designer", "designer" },
 }
+
 
 mymainmenu = awful.menu({ items = {
-	{ "open terminal", terminal },
-    { "chromium", "google-chrome --allow-outdated-plugins --memory-model=low" },
-    { "Rag-Bag",rag_bag  },
-	{ "spotify", "spotify" },
-	{ "system", mysystem },
-	{ "awesome", myawesomemenu, beautiful.awesome_icon }
- }
- })
+        { "open terminal", terminal },
+        { "file manager", "nautilus --no-desktop --browser" },
+        { "pcmanfm", "pcmanfm" },
+        { "virtual", "/home/gio/script/virtual" },
+        { "firefox", "firefox" },
+        { "chrome", "google-chrome" },
+	{ "dwb", "dwb" },
+        { "thunderbird","thunderbird-bin"},
+	{ "mutt","mutt"},
+        { "skype", "skype" },
+        { "hexchat", "hexchat" },
+	{ "irssi", "irssi" },
+        { "deluge", "deluge" },
+	{ "dtorrent", "dtorrent" },
+        { "office", officemenu },
+        { "devel", develmenu },
+        { "awesome", myawesomemenu, beautiful.awesome_icon },
+                                    { "open terminal", terminal }
+                                  }
+                        })
+
+-- }}}
 
 
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
