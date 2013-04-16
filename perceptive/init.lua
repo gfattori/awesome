@@ -27,7 +27,8 @@ local city_id = nil
 local sky_na = icon_path .. "na.png"
 local sky = nil
 local chosen_color = nil
-local language = string.gsub(os.getenv("LANG"), ".utf8", "") 
+local language = "en_US.utf8"
+--string.gsub(os.getenv("LANG"), ".utf8", "") 
 
 icon = wibox.widget.imagebox()
 widget = wibox.widget.textbox()

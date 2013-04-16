@@ -17,7 +17,7 @@ beautiful       = require("beautiful")
 naughty         = require("naughty")
 vicious         = require("vicious")
 scratch         = require("scratch")
-perceptive      = require("perceptive")
+-- -- -- -- perceptive      = require("perceptive")
 
 -- }}}
 
@@ -33,6 +33,7 @@ function run_once(cmd)
  end 
 
 run_once("unclutter -idle 10")
+run_once("setxkbmap it")
 
 -- }}}
 
@@ -81,11 +82,11 @@ active_theme = themes .. "/multicolor"
 -- Themes define colours, icons, and wallpapers
 beautiful.init(active_theme .. "/theme.lua")
 
-terminal = "urxvt"
+terminal = "urxvt -name Terminal +sb -fg white -bg rgba:2000/2000/2000/dddd"
 editor = "vim"
 editor_cmd = terminal .. " -e " .. editor
 gui_editor = "geany -ps"
-browser = "chromium"
+browser = "google-chrome"
 mail = terminal .. " -e mutt "
 chat = terminal .. " -e irssi "
 tasks = terminal .. " -e htop "
@@ -153,7 +154,7 @@ myawesomemenu = {
 }
 
 rag_bag = {
-	{ "Calculator", "gcalctool" },
+	{ "Calculator", "qalculate-gtk" },
 	{ "vlc", vlc },
 }
 
@@ -166,8 +167,8 @@ mysystem = {
 
 mymainmenu = awful.menu({ items = {
 	{ "open terminal", terminal },
-    { "chromium", "chromium --allow-outdated-plugins --memory-model=low" },
-    { "Rag-Bag",ragbag  },
+    { "chromium", "google-chrome --allow-outdated-plugins --memory-model=low" },
+    { "Rag-Bag",rag_bag  },
 	{ "spotify", "spotify" },
 	{ "system", mysystem },
 	{ "awesome", myawesomemenu, beautiful.awesome_icon }
@@ -314,91 +315,92 @@ mytextclock:buttons(util.table.join( awful.button({ }, 1, function() show(-1) en
 weathericon = wibox.widget.imagebox()
 weathericon:set_image(theme.confdir .. "/widgets/dish.png")
 weatherwidget = wibox.widget.textbox()
-perceptive.register(643787)
+-- -- -- -- perceptive.register(718345)
 
 weather_t = awful.tooltip({ objects = { weatherwidget },})
 
 vicious.register(weatherwidget, vicious.widgets.weather,
-                function (widget, args)
-                    weather_t:set_text("City: " .. args["{city}"] .."\nWind: " .. args["{windkmh}"] .. "km/h " 
-                                                .. args["{wind}"] .. "\nSky: " .. args["{sky}"] .. "\nHumidity: " 
-                                                .. args["{humid}"] .. "%")
-                    return args["{tempc}"] .. "C"
-                end, 1800, "EDDF")
+               function (widget, args)
+                   weather_t:set_text("City: " .. args["{city}"] .."\nWind: " .. args["{windkmh}"] .. "km/h " 
+                                               .. args["{wind}"] .. "\nSky: " .. args["{sky}"] .. "\nHumidity: " 
+                                               .. args["{humid}"] .. "%")
+                   return args["{tempc}"] .. "C"
+               end, 1800, "LIML")
 
 -- spotify 
-    spotifywidget = wibox.widget.textbox()
-    
-    vicious.register( spotifywidget, vicious.widgets.spotify, function ( widget, args)
-        if args["{State}"] == 'Playing' then
-            return '<span color="green">' .. args["{Artist}"] .. ' - ' .. args["{Title}"] .. '</span>'
-        else
-            return ''
-        end
-    end, 2)
+--    spotifywidget = wibox.widget.textbox()
+--    
+--    vicious.register( spotifywidget, vicious.widgets.spotify, function ( widget, args)
+--        if args["{State}"] == 'Playing' then
+--            return '<span color="green">' .. args["{Artist}"] .. ' - ' .. args["{Title}"] .. '</span>'
+--        else
+--            return ''
+--       end
+--    end, 2)
+--
 -- /home fs widget
-fshicon = wibox.widget.imagebox()
-fshicon:set_image(theme.confdir .. "/widgets/fs.png")
-fshwidget = wibox.widget.textbox()
-    vicious.register(fshwidget, vicious.widgets.fs,
-    function (widget, args)
-        if args["{/home used_p}"] >= 95 and args["{/home used_p}"] < 99 then
-            return colwhi .. args["{/home used_p}"] .. "%" .. coldef
-        elseif args["{/home used_p}"] >= 99 and args["{/home used_p}"] <= 100 then
-            naughty.notify({ title = "Attenzione", text = "Partizione /home esaurita!\nFa' un po' di spazio.",
-                             timeout = 10,
-                             position = "top_right",
-                             fg = beautiful.fg_urgent,
-                             bg = beautiful.bg_urgent })
-            return colwhi .. args["{/home used_p}"] .. "%" .. coldef
-        else
-            return azure .. args["{/home used_p}"] .. "%" .. coldef
-        end
-    end, 3600)
+-- -- -- -- fshicon = wibox.widget.imagebox()
+-- -- -- -- fshicon:set_image(theme.confdir .. "/widgets/fs.png")
+-- -- -- -- fshwidget = wibox.widget.textbox()
+-- -- -- --     vicious.register(fshwidget, vicious.widgets.fs,
+-- -- -- --     function (widget, args)
+-- -- -- --         if args["{/home used_p}"] >= 95 and args["{/home used_p}"] < 99 then
+-- -- -- --             return colwhi .. args["{/home used_p}"] .. "%" .. coldef
+-- -- -- --         elseif args["{/home used_p}"] >= 99 and args["{/home used_p}"] <= 100 then
+-- -- -- --             naughty.notify({ title = "Attenzione", text = "Partizione /home esaurita!\nFa' un po' di spazio.",
+-- -- -- --                              timeout = 10,
+-- -- -- --                              position = "top_right",
+-- -- -- --                              fg = beautiful.fg_urgent,
+-- -- -- --                              bg = beautiful.bg_urgent })
+-- -- -- --             return colwhi .. args["{/home used_p}"] .. "%" .. coldef
+-- -- -- --         else
+-- -- -- --             return azure .. args["{/home used_p}"] .. "%" .. coldef
+-- -- -- --         end
+-- -- -- --     end, 600)
 
-local infos = nil
-
-function remove_info()
-    if infos ~= nil then 
-        naughty.destroy(infos)
-        infos = nil
-    end
-end
-
-function add_info()
-    remove_info()
-    local capi = {
-		mouse = mouse,
-		screen = screen
-	  }
-    local cal = awful.util.pread(scriptdir .. "dfs")
-    cal = string.gsub(cal, "          ^%s*(.-)%s*$", "%1")
-    infos = naughty.notify({
-        text = string.format('<span font_desc="%s">%s</span>', "Terminus", cal),
-      	timeout = 0,
-        position = "top_right",
-        margin = 10,
-        height = 170,
-        width = 585,
-		  screen	= capi.mouse.screen
-    })
-end
-
-fshwidget:connect_signal('mouse::enter', function () add_info() end)
-fshwidget:connect_signal('mouse::leave', function () remove_info() end)
+-- -- -- -- local infos = nil
+-- -- -- -- 
+-- -- -- -- function remove_info()
+-- -- -- --     if infos ~= nil then 
+-- -- -- --         naughty.destroy(infos)
+-- -- -- --         infos = nil
+-- -- -- --     end
+-- -- -- -- end
+-- -- -- -- 
+-- -- -- -- function add_info()
+-- -- -- --     remove_info()
+-- -- -- --     local capi = {
+-- -- -- -- 		mouse = mouse,
+-- -- -- -- 		screen = screen
+-- -- -- -- 	  }
+-- -- -- --     local cal = awful.util.pread(scriptdir .. "dfs")
+-- -- -- --     cal = string.gsub(cal, "          ^%s*(.-)%s*$", "%1")
+-- -- -- --     infos = naughty.notify({
+-- -- -- --         text = string.format('<span font_desc="%s">%s</span>', "Terminus", cal),
+-- -- -- --       	timeout = 0,
+-- -- -- --         position = "top_right",
+-- -- -- --         margin = 10,
+-- -- -- --         height = 170,
+-- -- -- --         width = 585,
+-- -- -- -- 		  screen	= capi.mouse.screen
+-- -- -- --     })
+-- -- -- -- end
+-- -- -- -- 
+-- -- -- -- fshwidget:connect_signal('mouse::enter', function () add_info() end)
+-- -- -- -- fshwidget:connect_signal('mouse::leave', function () remove_info() end)
 
 -- Uptime
 uptimeicon = wibox.widget.imagebox()
 uptimeicon:set_image(beautiful.widget_uptime)
 uptimewidget = wibox.widget.textbox()
-vicious.register(uptimewidget, vicious.widgets.uptime, brown .. "$2.$3" .. coldef)
+vicious.register(uptimewidget, vicious.widgets.uptime, brown .. "$2.$3" .. coldef,60)
 
 -- Gmail widget
-mygmail = wibox.widget.textbox()
-gmail_t = awful.tooltip({ objects = { mygmail },})
-mygmailimg = wibox.widget.imagebox(beautiful.widget_gmail)
+-- mygmail = wibox.widget.textbox()
+-- gmail_t = awful.tooltip({ objects = { mygmail },})
+-- mygmailimg = wibox.widget.imagebox(beautiful.widget_gmail)
 
-vicious.register(mygmail, vicious.widgets.mutt,"$1%", 300)
+--vicious.register(mygmail, vicious.widgets.mutt,"$1%", 300)
 
 --vicious.register(mygmail, vicious.widgets.gmail,
 --                function (widget, args)
@@ -406,15 +408,15 @@ vicious.register(mygmail, vicious.widgets.mutt,"$1%", 300)
 --                    gmail_t:add_to_object(mygmailimg)
 --                    return args["{count}"]
 --                 end, 2)
-mygmail:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn(mail, false) end)))
+-- mygmail:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn(mail, false) end)))
 
 -- CPU widget
 cpuicon = wibox.widget.imagebox()
 cpuicon:set_image(beautiful.widget_cpu)
 cpuwidget = wibox.widget.textbox()
-vicious.register(cpuwidget, vicious.widgets.cpu, "$1", 3)
+vicious.register(cpuwidget, vicious.widgets.cpu, "$1", 2)
 cpuicon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn(tasks, false) end)))
-
+-- -- -- -- 
 -- Temp widget
 tempicon = wibox.widget.imagebox()
 tempicon:set_image(beautiful.widget_temp)
@@ -422,17 +424,17 @@ tempicon:buttons(awful.util.table.join(
     awful.button({ }, 1, function () awful.util.spawn(terminal .. " -e su -c powertop ", false) end)
     ))
    tempwidget = wibox.widget.textbox()
-   vicious.register(tempwidget, vicious.widgets.thermal_easy, "<span color=\"#f1af5f\">$1 C</span>", 60, {"", "core"} )
-
+  vicious.register(tempwidget, vicious.widgets.thermal_easy, "<span color=\"#f1af5f\">$1 C</span>", 5, {"", "core"} )
+-- -- -- -- 
 -- Battery widget
 baticon = wibox.widget.imagebox()
 baticon:set_image(beautiful.widget_batt)
 batwidget = wibox.widget.textbox()
-vicious.register( batwidget, vicious.widgets.bat, "$2", 60, "BAT0")
+vicious.register( batwidget, vicious.widgets.bat, "$2", 10, "BAT")
 
 function batstate()
 
-     local file = io.open("/sys/class/power_supply/BAT0/status", "r")
+     local file = io.open("/sys/class/power_supply/BAT/status", "r")
 
      if (file == nil) then
      	  return "Cable plugged"
@@ -479,56 +481,56 @@ vicious.register(batwidget, vicious.widgets.bat,
                })
           end
           return " " .. args[2] .. "% "
-     end, 1, 'BAT0')
-
+     end, 10, 'BAT')
+-- -- -- -- 
 -- Volume widget
 volicon = wibox.widget.imagebox()
 volicon:set_image(beautiful.widget_vol)
 volumewidget = wibox.widget.textbox()
-vicious.register(volumewidget, vicious.widgets.volume, blue .. "$1%" .. coldef,  1, "Master")
+vicious.register(volumewidget, vicious.widgets.volume, blue .. "$1%" .. coldef,  5, "Master")
 
 -- Net widget
 netdownicon = wibox.widget.imagebox()
 netdownicon:set_image(beautiful.widget_netdown)
 netdownicon.align = "middle"
 netdowninfo = wibox.widget.textbox()
---vicious.register(netdowninfo, vicious.widgets.net, green .. "${wlan0 down_kb}" .. coldef, 1)
-vicious.register(netdowninfo, vicious.widgets.net, green .. "${eth0 down_kb}" .. coldef, 15)
+vicious.register(netdowninfo, vicious.widgets.net, green .. "${wlan0 down_kb}" .. coldef, 10)
+-- vicious.register(netdowninfo, vicious.widgets.net, green .. "${eth0 down_kb}" .. coldef, 1000)
 netupicon = wibox.widget.imagebox()
 netupicon:set_image(beautiful.widget_netup)
 netupicon.align = "middle"
 netupinfo = wibox.widget.textbox()
---vicious.register(netupinfo, vicious.widgets.net, red .. "${wlan0 up_mb}" .. coldef, 1)
-vicious.register(netupinfo, vicious.widgets.net, green .. "${eth0 up_kb}" .. coldef, 15)
---
+vicious.register(netupinfo, vicious.widgets.net, red .. "${wlan0 up_mb}" .. coldef, 10)
+-- vicious.register(netupinfo, vicious.widgets.net, green .. "${eth0 up_kb}" .. coldef, 1000)
+-- -- -- -- --
 -- Memory widget
 memicon = wibox.widget.imagebox()
 memicon:set_image(beautiful.widget_mem)
 memwidget = wibox.widget.textbox()
-vicious.register(memwidget, vicious.widgets.mem, yellow .. "$2M" .. coldef, 60)
+vicious.register(memwidget, vicious.widgets.mem, yellow .. "$2M" .. coldef, 2)
 
 -- MPD Widget
-mpdwidget = wibox.widget.textbox()
-mpdicon = wibox.widget.imagebox()
-mpdicon:set_image(theme.confdir .. "/widgets/note.png")
-
-vicious.register(mpdwidget, vicious.widgets.mpd,
-function(widget, args)
-	-- play
-	if (args["{state}"] == "Play") then
-		return red .. args["{Title}"] .. coldef .. colwhi .. " - " .. coldef .. colwhi  .. 
-		args["{Artist}"] .. coldef
-	-- pause
-	elseif (args["{state}"] == "Pause") then
-		return red .. "mpd</span>" .. colwhi .." paused</span>"
-	-- stop
-	elseif (args["{state}"] == "Stop") then
-		return red .. "mpd</span>" .. colwhi .." stopped</span>"
-	-- not running
-	else
-		return red .. "mpd</span>" .. colwhi .." off</span>"
-	end
-	end, 1)
+-- mpdwidget = wibox.widget.textbox()
+-- mpdicon = wibox.widget.imagebox()
+-- mpdicon:set_image(theme.confdir .. "/widgets/note.png")
+-- 
+-- vicious.register(mpdwidget, vicious.widgets.mpd,
+-- function(widget, args)
+-- 	-- play
+-- 	if (args["{state}"] == "Play") then
+-- 		return red .. args["{Title}"] .. coldef .. colwhi .. " - " .. coldef .. colwhi  .. 
+-- 		args["{Artist}"] .. coldef
+-- 	-- pause
+-- 	elseif (args["{state}"] == "Pause") then
+-- 		return red .. "mpd</span>" .. colwhi .." paused</span>"
+-- 	-- stop
+-- 	elseif (args["{state}"] == "Stop") then
+-- 		return red .. "mpd</span>" .. colwhi .." stopped</span>"
+-- 	-- not running
+-- 	else
+-- 		return red .. "mpd</span>" .. colwhi .." off</span>"
+-- 	end
+-- 	end, 1000)
 
 -- Spacer
 spacer = wibox.widget.textbox(" ")
@@ -620,7 +622,7 @@ for s = 1, screen.count() do
     --left_layout:add(spacer)
     --left_layout:add(mpdicon)
     --left_layout:add(mpdwidget)
-    left_layout:add(spotifywidget)
+--    left_layout:add(spotifywidget)
     --left_layout:add(spacer)
 
     -- Widgets that are aligned to the upper right
@@ -640,33 +642,33 @@ for s = 1, screen.count() do
     right_layout:add(spacer)
     right_layout:add(cpuicon)
     right_layout:add(cpuwidget)
-    right_layout:add(spacer)
-    right_layout:add(fshicon)
-    right_layout:add(fshwidget)
-    right_layout:add(spacer)
+-- -- -- --     right_layout:add(spacer)
+-- -- -- --     right_layout:add(fshicon)
+-- -- -- --     right_layout:add(fshwidget)
+-- -- -- --     right_layout:add(spacer)
     right_layout:add(uptimeicon)
     right_layout:add(uptimewidget) 
+-- -- -- --     right_layout:add(spacer)
+-- -- -- -- --    right_layout:add(weathericon)
+-- -- -- --    right_layout:add(perceptive.icon)
+-- -- -- --    right_layout:add(perceptive.widget)
     right_layout:add(spacer)
-    right_layout:add(weathericon)
-    right_layout:add(perceptive.icon)
-    right_layout:add(perceptive.widget)
-    right_layout:add(spacer)
-    right_layout:add(weatherwidget)
+   right_layout:add(weatherwidget)
     right_layout:add(spacer)
     right_layout:add(tempicon)
     right_layout:add(tempwidget)
     right_layout:add(spacer)
-    right_layout:add(mygmailimg)
-    right_layout:add(mygmail)
-    right_layout:add(spacer)     
+-- -- -- -- --    right_layout:add(mygmailimg)
+-- -- -- -- --    right_layout:add(mygmail)
+-- -- -- --     right_layout:add(spacer)     
     right_layout:add(baticon)
     right_layout:add(batwidget)
-    --right_layout:add(spacer)
-    right_layout:add(clockicon)
-    right_layout:add(mytextclock)
-    --right_layout:add(mylayoutbox[s])
-
-    -- Now bring it all together (with the tasklist in the middle)
+-- -- -- --     --right_layout:add(spacer)
+-- -- -- --     right_layout:add(clockicon)
+-- -- -- --     right_layout:add(mytextclock)
+-- -- -- --     --right_layout:add(mylayoutbox[s])
+-- -- -- -- 
+--     Now bring it all together (with the tasklist in the middle)
     local layout = wibox.layout.align.horizontal()
     layout:set_left(left_layout)
     --layout:set_middle(mytasklist[s])
@@ -795,22 +797,22 @@ globalkeys = awful.util.table.join(
                                           end),
 
     -- Music control
-    awful.key({ altkey, "Control" }, "Up", function () 
-                                              awful.util.spawn( "mpc toggle", false ) 
-                                              vicious.force({ mpdwidget } )
-                                           end),
-    awful.key({ altkey, "Control" }, "Down", function () 
-                                                awful.util.spawn( "mpc stop", false ) 
-                                                vicious.force({ mpdwidget } )
-                                             end ),
-    awful.key({ altkey, "Control" }, "Left", function ()
-                                                awful.util.spawn( "mpc prev", false )
-                                                vicious.force({ mpdwidget } )
-                                             end ),
-    awful.key({ altkey, "Control" }, "Right", function () 
-                                                awful.util.spawn( "mpc next", false )
-                                                vicious.force({ mpdwidget } )
-                                              end ),
+--     awful.key({ altkey, "Control" }, "Up", function () 
+--                                               awful.util.spawn( "mpc toggle", false ) 
+--                                               vicious.force({ mpdwidget } )
+--                                            end),
+--     awful.key({ altkey, "Control" }, "Down", function () 
+--                                                 awful.util.spawn( "mpc stop", false ) 
+--                                                 vicious.force({ mpdwidget } )
+--                                              end ),
+--     awful.key({ altkey, "Control" }, "Left", function ()
+--                                                 awful.util.spawn( "mpc prev", false )
+--                                                 vicious.force({ mpdwidget } )
+--                                              end ),
+--     awful.key({ altkey, "Control" }, "Right", function () 
+--                                                 awful.util.spawn( "mpc next", false )
+--                                                 vicious.force({ mpdwidget } )
+--                                               end ),
 
     -- Copy to clipboard
     awful.key({ modkey,        }, "c",      function () os.execute("xsel -p -o | xsel -i -b") end),
@@ -1016,5 +1018,9 @@ end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+
+
+
+
 
 -- }}}
